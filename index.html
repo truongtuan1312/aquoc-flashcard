@@ -76,6 +76,8 @@ h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5r
     <button class="active" onclick="setUnit('all')">All</button>
     <button onclick="setUnit(1)">Unit 1</button>
     <button onclick="setUnit(2)">Unit 2</button>
+    <button onclick="setUnit(3)">Unit 3</button>
+    <button onclick="setUnit(4)">Unit 4</button>
   </div>
 </div>
 <div class="mode-toggle">
@@ -190,6 +192,85 @@ const ALL_VOCAB = [
   {w:"abdominal",pos:"adj",def:"relating to the abdomen (the part of the body below the chest that contains the stomach, bowels, etc.)",vi:"thuộc bụng",u:2},
   {w:"crampy",pos:"adj",def:"relating to or causing cramps (painful involuntary spasmodic contraction of a muscle)",vi:"co thắt, quặn",u:2},
   {w:"gastroenteritis",pos:"n",def:"inflammation of the stomach and the small intestine",vi:"viêm dạ dày ruột",u:2},
+
+  // Unit 3
+  {w:"procedure",pos:"n",def:"a way of doing something, especially the usual or correct way; a medical operation",vi:"thủ thuật",u:3},
+  {w:"sterilize",pos:"v",def:"to kill the bacteria in or on something",vi:"khử trùng",u:3},
+  {w:"sterile",pos:"adj",def:"completely clean and free from bacteria",vi:"vô trùng",u:3},
+  {w:"drain",pos:"v",def:"to make something empty or dry by removing the liquid from it",vi:"làm tháo, thoát dịch từ cơ thể; dẫn lưu",u:3},
+  {w:"obtain",pos:"v",def:"to get something, especially by making an effort",vi:"đạt được, lấy được",u:3},
+  {w:"withdraw",pos:"v",def:"to pull out (of something)",vi:"rút ra",u:3},
+  {w:"stylet",pos:"n",def:"a splender surgical probe; a very thin metal tool used by doctors to examine inside someone",vi:"que thông",u:3},
+  {w:"CSF",pos:"n",def:"cerebrospinal fluid",vi:"dịch não tủy",u:3},
+  {w:"cerebrum",pos:"n",def:"the front part of the brain",vi:"đại não",u:3},
+  {w:"spine",pos:"n",def:"the row of small bones that are connected together down the middle of the back",vi:"cột sống, xương sống",u:3},
+  {w:"specimen",pos:"n",def:"a sample",vi:"mẫu vật",u:3},
+  {w:"lumbar vertebrae",pos:"n",def:"the vertebrae of the lower back (L3/4)",vi:"đốt sống thắt lưng",u:3},
+  {w:"consent",pos:"n",def:"permission from a patient for a medical professional to carry out treatment, with complete understanding of the possible risks and consequences",vi:"giấy đồng ý; giấy chấp thuận; đồng thuận tự nguyện",u:3},
+  {w:"manometer",pos:"n",def:"a device to measure pressures",vi:"áp kế",u:3},
+  {w:"encounter",pos:"n",def:"a session, meeting",vi:"buổi gặp gỡ",u:3},
+  {w:"curriculum",pos:"n",def:"the subjects that are included in a course of study or taught in a school, college, etc.",vi:"chương trình học",u:3},
+  {w:"adequately",pos:"adv",def:"in a way that is enough in quantity, or good enough in quality, for a particular purpose or need",vi:"một cách đầy đủ",u:3},
+  {w:"competence",pos:"n",def:"the ability to do something well",vi:"khả năng, sự thành thạo",u:3},
+  {w:"venepuncture",pos:"n",def:"the puncture of a vein to draw blood",vi:"chọc tĩnh mạch",u:3},
+  {w:"IV cannulation",pos:"n",def:"insertion of a cannula into a vein for intravenous access",vi:"đặt ống thông tĩnh mạch",u:3},
+  {w:"anaesthetic",pos:"n",def:"a drug that makes the body unable to feel pain",vi:"thuốc gây mê/gây tê",u:3},
+  {w:"artery",pos:"n",def:"any of the tubes that carry blood from the heart to other parts of the body",vi:"động mạch",u:3},
+  {w:"blood culture",pos:"n",def:"a medical laboratory test used to detect bacteria or fungi in a person's blood",vi:"nuôi cấy",u:3},
+  {w:"peripheral",pos:"adj",def:"connected with the outer edge of a particular area",vi:"ngoại biên",u:3},
+  {w:"nasogastric",pos:"adj",def:"relating to the nose and stomach",vi:"mũi-dạ dày",u:3},
+  {w:"adjunct",pos:"n",def:"a supplementary treatment or method",vi:"liệu pháp hỗ trợ; phương pháp điều trị hỗ trợ",u:3},
+  {w:"intubation",pos:"n",def:"the insertion of a tube into the trachea to maintain an open airway",vi:"đặt nội khí quản",u:3},
+  {w:"criterion",pos:"n",def:"a standard, principle (plural: criteria)",vi:"tiêu chí",u:3},
+  {w:"analgesia",pos:"n",def:"the relief of pain; the reduction or absence of pain sensation while remaining conscious",vi:"giảm đau",u:3},
+  {w:"sedation",pos:"n",def:"the act of giving somebody drugs in order to make them calm or to make them sleep",vi:"an thần",u:3},
+  {w:"aseptic",pos:"adj",def:"free from harmful bacteria",vi:"vô trùng",u:3},
+
+  // Unit 4
+  {w:"wear off",pos:"v",def:"gradually disappear",vi:"dần biến mất",u:4},
+  {w:"resume",pos:"v",def:"begin again or continue after interruption",vi:"tiếp tục",u:4},
+  {w:"foolproof",pos:"adj",def:"very well designed and easy to use so that it can't fail and you cannot use it wrongly",vi:"không thể sai được",u:4},
+  {w:"perforation",pos:"n",def:"a hole or break in the walls or membrane of an organ or structure of the body",vi:"sự thủng",u:4},
+  {w:"cystoscopy",pos:"n",def:"examination of the bladder using a cystoscope",vi:"soi bàng quang",u:4},
+  {w:"radical mastectomy",pos:"n",def:"surgical removal of the entire breast and surrounding tissue",vi:"cắt bỏ tuyến vú tận gốc",u:4},
+  {w:"colostomy",pos:"n",def:"a surgical operation in which part of the colon is brought through the abdominal wall to create an opening",vi:"mở thông ruột kết",u:4},
+  {w:"colososcopy",pos:"n",def:"examination of the colon using a colonoscope",vi:"soi ruột kết (kết tràng)",u:4},
+  {w:"colposcopy",pos:"n",def:"examination of the vagina and cervix using a colposcope",vi:"soi âm đạo",u:4},
+  {w:"ERCP",pos:"n",def:"Endoscopic Retrograde Cholangiopancreatography",vi:"nội soi mật tụy ngược dòng",u:4},
+  {w:"catheterization",pos:"n",def:"the process of inserting a catheter into the body",vi:"sự thông (cardiac: thông tim)",u:4},
+  {w:"bronchoscopy",pos:"n",def:"examination of the bronchi using a bronchoscope",vi:"soi phế quản",u:4},
+  {w:"herniorrhaphy",pos:"n",def:"surgical repair of a hernia",vi:"khâu thoát vị",u:4},
+  {w:"prostate",pos:"n",def:"a small organ in men, near the bladder, that produces a liquid in which sperm is carried",vi:"tuyến tiền liệt",u:4},
+  {w:"bladder",pos:"n",def:"an organ that has the shape of a bag in which liquid waste (urine) collects before it is passed out of the body",vi:"bàng quang",u:4},
+  {w:"dye",pos:"n",def:"a substance used for coloring",vi:"thuốc nhuộm",u:4},
+  {w:"pancreas",pos:"n",def:"an organ near the stomach that produces insulin and a liquid that helps the body to digest food",vi:"tuyến tụy",u:4},
+  {w:"pancreatic duct",pos:"n",def:"the duct of the pancreas",vi:"ống tụy",u:4},
+  {w:"bile duct",pos:"n",def:"the duct that carries bile from the liver and gallbladder",vi:"ống mật",u:4},
+  {w:"visualize",pos:"v",def:"to make something able to be seen by the eye",vi:"làm cho có thể nhìn thấy; hiển thị",u:4},
+  {w:"mesh",pos:"n",def:"material made of a network of wire or plastic threads",vi:"lưới; mạng",u:4},
+  {w:"bowel",pos:"n",def:"the long tube that carries solid waste from the stomach out of the body = large intestine/large bowel",vi:"ruột già",u:4},
+  {w:"intestine",pos:"n",def:"a long tube through which food travels from the stomach and out of the body while it is being digested",vi:"ruột",u:4},
+  {w:"abdomen",pos:"n",def:"the part of the body below the chest that contains the stomach, bowels, etc.",vi:"bụng; vùng bụng",u:4},
+  {w:"cervix",pos:"n",def:"the narrow passage at the opening of the womb of a woman or female animal",vi:"cổ tử cung",u:4},
+  {w:"womb",pos:"n",def:"the organ in women and female animals in which babies develop before they are born = uterus",vi:"tử cung",u:4},
+  {w:"urethra",pos:"n",def:"the tube that carries liquid waste out of the body; in men and male animals sperm also flows along this tube",vi:"niệu đạo",u:4},
+  {w:"gland",pos:"n",def:"an organ of the body or of a plant that secretes (produces) liquid chemicals that have various purposes",vi:"tuyến",u:4},
+  {w:"axilla",pos:"n",def:"the hollow area under the arm where it joins the body = armpit",vi:"nách",u:4},
+  {w:"induce",pos:"v",def:"to cause something",vi:"gây ra",u:4},
+  {w:"drowsiness",pos:"n",def:"the state of being tired and wanting to sleep",vi:"buồn ngủ",u:4},
+  {w:"drowsy",pos:"adj",def:"tired and wanting to sleep",vi:"buồn ngủ",u:4},
+  {w:"introduce",pos:"v",def:"to put something into something",vi:"đưa vào",u:4},
+  {w:"oesophagus",pos:"n",def:"the tube through which food passes from the mouth to the stomach",vi:"thực quản",u:4},
+  {w:"duodenum",pos:"n",def:"the first part of the small intestine, next to the stomach",vi:"tá tràng",u:4},
+  {w:"ileum",pos:"n",def:"the third and lowest part of the small intestine",vi:"hồi tràng",u:4},
+  {w:"jejunum",pos:"n",def:"the middle part of the small intestine",vi:"hỗng tràng",u:4},
+  {w:"endoscope",pos:"n",def:"a long, thin medical device that is used to examine the hollow organs of the body such as the lungs",vi:"ống nội soi",u:4},
+  {w:"endoscopy",pos:"n",def:"the act of examining using an endoscope",vi:"nội soi",u:4},
+  {w:"mucosa",pos:"n",def:"the thin skin that covers the inside surface of parts of the body such as the nose and mouth and produces mucus to protect them",vi:"niêm mạc; màng nhầy",u:4},
+  {w:"anaesthetize",pos:"v",def:"to make a person or animal unable to feel pain, especially by giving them an anaesthetic before a medical operation",vi:"gây mê; gây tê",u:4},
+  {w:"advance",pos:"v",def:"to move forward",vi:"tiến lên",u:4},
+  {w:"sedate",pos:"v",def:"to give somebody drugs in order to make them calm and/or to make them sleep",vi:"cho bệnh nhân dùng thuốc an thần",u:4},
+  {w:"biopsy",pos:"n",def:"a sample taken for pathological examination; the act of taking such a sample",vi:"sinh thiết",u:4},
 ];
 
 let vocab = [...ALL_VOCAB];
@@ -203,7 +284,7 @@ function setUnit(u) {
   vocab = u === 'all' ? [...ALL_VOCAB] : ALL_VOCAB.filter(v => v.u === u);
   idx = 0;
   document.querySelectorAll('.unit-tabs button').forEach((b,i) => {
-    b.classList.toggle('active', (i===0 && u==='all') || (i===1 && u===1) || (i===2 && u===2));
+    b.classList.toggle('active', (i===0 && u==='all') || (i===1 && u===1) || (i===2 && u===2) || (i===3 && u===3) || (i===4 && u===4));
   });
   render();
 }
