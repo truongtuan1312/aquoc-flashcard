@@ -80,6 +80,10 @@ h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5r
   <button onclick="setMode('vi')">Vietnamese</button>
   <button class="shuffle-btn" onclick="shuffle()">Shuffle</button>
 </div>
+<div class="mode-toggle">
+  <button class="active" onclick="setDir('normal')">Word &#8594; Meaning</button>
+  <button onclick="setDir('reverse')">Meaning &#8594; Word</button>
+</div>
 <div class="progress" id="progress"></div>
 <div class="card-area">
   <div class="card" id="card" onclick="flip()">
@@ -188,6 +192,7 @@ const ALL_VOCAB = [
 let vocab = [...ALL_VOCAB];
 let idx = 0;
 let mode = 'def';
+let dir = 'normal';
 let unit = 'all';
 
 function setUnit(u) {
@@ -202,8 +207,16 @@ function setUnit(u) {
 
 function setMode(m) {
   mode = m;
-  document.querySelectorAll('.mode-toggle button:not(.shuffle-btn)').forEach((b,i) => {
+  document.querySelectorAll('.mode-toggle')[0].querySelectorAll('button:not(.shuffle-btn)').forEach((b,i) => {
     b.classList.toggle('active', (i===0 && m==='def') || (i===1 && m==='vi'));
+  });
+  render();
+}
+
+function setDir(d) {
+  dir = d;
+  document.querySelectorAll('.mode-toggle')[1].querySelectorAll('button').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && d==='normal') || (i===1 && d==='reverse'));
   });
   render();
 }
@@ -232,12 +245,20 @@ function render() {
   const front = document.getElementById('front');
   const back = document.getElementById('back');
 
-  front.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})</div><div class="card-hint">tap to reveal</div>`;
-
-  if (mode === 'def') {
-    back.innerHTML = `<div class="card-def">${c.def}</div>`;
+  if (dir === 'normal') {
+    front.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})</div><div class="card-hint">tap to reveal</div>`;
+    if (mode === 'def') {
+      back.innerHTML = `<div class="card-def">${c.def}</div>`;
+    } else {
+      back.innerHTML = `<div class="card-word" style="font-size:1.3rem">${c.vi}</div>`;
+    }
   } else {
-    back.innerHTML = `<div class="card-word" style="font-size:1.3rem">${c.vi}</div>`;
+    if (mode === 'def') {
+      front.innerHTML = `<div class="card-def">${c.def}</div><div class="card-hint">tap to reveal word</div>`;
+    } else {
+      front.innerHTML = `<div class="card-word" style="font-size:1.3rem">${c.vi}</div><div class="card-hint">tap to reveal word</div>`;
+    }
+    back.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})</div>`;
   }
 
   document.getElementById('progress').textContent = `${idx + 1} / ${vocab.length}` + (unit === 'all' ? '' : ` — Unit ${unit}`);
