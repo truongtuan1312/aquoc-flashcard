@@ -1,0 +1,263 @@
+<title>Medical Vocab Flashcards</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Single-screen card study app — tap to flip, swipe to advance */
+:root {
+  --bg: #f7f7f5; --surface: #ffffff; --fg: #1a1a1a; --fg2: #6b6b6b;
+  --accent: #2a6b5a; --accent-light: #e8f4ef; --border: #e5e5e3;
+  --flip-bg: #2a6b5a; --flip-fg: #ffffff;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161616; --surface: #222222; --fg: #e8e8e6; --fg2: #9a9a9a;
+  --accent: #4ecba0; --accent-light: #1e3a30; --border: #333;
+  --flip-bg: #4ecba0; --flip-fg: #111; color-scheme: dark;
+}}
+:root[data-theme="dark"] {
+  --bg: #161616; --surface: #222222; --fg: #e8e8e6; --fg2: #9a9a9a;
+  --accent: #4ecba0; --accent-light: #1e3a30; --border: #333;
+  --flip-bg: #4ecba0; --flip-fg: #111; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; min-height: 100vh;
+  max-width: 640px; margin: 0 auto;
+}
+h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; margin: 0; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; flex-wrap: wrap; gap: 8px; }
+.unit-tabs { display: flex; gap: 6px; }
+.unit-tabs button, .mode-toggle button {
+  font-family: inherit; font-size: .8rem; font-weight: 500;
+  border: 1px solid var(--border); background: var(--surface); color: var(--fg2);
+  padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all .15s;
+}
+.unit-tabs button.active, .mode-toggle button.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.mode-toggle { display: flex; gap: 6px; margin-bottom: 8px; }
+.progress { font-size: .8rem; color: var(--fg2); padding-bottom: 8px; font-variant-numeric: tabular-nums; }
+.card-area { flex: 1; display: flex; align-items: center; justify-content: center; perspective: 800px; padding: 8px 0 16px; }
+.card { width: 100%; max-width: 480px; min-height: 280px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform .45s ease; }
+.card.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 28px; text-align: center; box-sizing: border-box;
+}
+.card-front { background: var(--surface); border: 1px solid var(--border); }
+.card-back { background: var(--flip-bg); color: var(--flip-fg); transform: rotateY(180deg); }
+.card-word { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+.card-pos { font-size: .85rem; opacity: .6; margin-bottom: 4px; }
+.card-hint { font-size: .85rem; opacity: .55; margin-top: 12px; }
+.card-def { font-size: 1.05rem; line-height: 1.55; }
+.nav { display: flex; gap: 12px; justify-content: center; padding-block: 16px; }
+.nav button {
+  font-family: inherit; font-size: .9rem; font-weight: 500;
+  background: var(--surface); border: 1px solid var(--border); color: var(--fg);
+  padding: 10px 28px; border-radius: 10px; cursor: pointer; transition: all .15s;
+}
+.nav button:hover { border-color: var(--accent); color: var(--accent); }
+.nav button:disabled { opacity: .3; cursor: default; }
+.shuffle-btn {
+  font-family: inherit; font-size: .8rem; font-weight: 500;
+  background: none; border: none; color: var(--accent); cursor: pointer; padding: 4px 0;
+}
+</style>
+
+<div class="top-bar">
+  <h1>Medical Vocab</h1>
+  <div class="unit-tabs">
+    <button class="active" onclick="setUnit('all')">All</button>
+    <button onclick="setUnit(1)">Unit 1</button>
+    <button onclick="setUnit(2)">Unit 2</button>
+  </div>
+</div>
+<div class="mode-toggle">
+  <button class="active" onclick="setMode('def')">English Definition</button>
+  <button onclick="setMode('vi')">Vietnamese</button>
+  <button class="shuffle-btn" onclick="shuffle()">Shuffle</button>
+</div>
+<div class="progress" id="progress"></div>
+<div class="card-area">
+  <div class="card" id="card" onclick="flip()">
+    <div class="card-face card-front" id="front"></div>
+    <div class="card-face card-back" id="back"></div>
+  </div>
+</div>
+<div class="nav">
+  <button id="prevBtn" onclick="prev()">&#8592; Prev</button>
+  <button id="nextBtn" onclick="next()">Next &#8594;</button>
+</div>
+
+<script>
+const ALL_VOCAB = [
+  // Unit 1
+  {w:"cardiologist",pos:"n",def:"a doctor who studies and treats heart diseases",vi:"bác sĩ tim mạch",u:1},
+  {w:"diagnosis",pos:"n",def:"the act of discovering or identifying the exact cause of an illness or a problem",vi:"sự chẩn đoán",u:1},
+  {w:"diagnose",pos:"v",def:"to say exactly what an illness or the cause of a problem is",vi:"chẩn đoán",u:1},
+  {w:"transplantation",pos:"n",def:"the process of taking an organ, skin, etc. from one person and putting it into or onto another",vi:"sự cấy ghép",u:1},
+  {w:"vascular",pos:"adj",def:"of or containing veins",vi:"thuộc về mạch",u:1},
+  {w:"triage nurse",pos:"n",def:"a registered nurse who first examines patients in an emergency setting to decide who needs medical treatment most urgently",vi:"y tá phân loại",u:1},
+  {w:"next of kin",pos:"n",def:"your closest living relative or relatives",vi:"người thân",u:1},
+  {w:"referral",pos:"n",def:"the act of sending somebody who needs professional help to a person or place that can provide it",vi:"sự chuyển viện",u:1},
+  {w:"fraudulently",pos:"adv",def:"in a way that is intended to cheat somebody, usually in order to make money illegally",vi:"lừa đảo",u:1},
+  {w:"GP (General Practitioner)",pos:"n",def:"a family doctor who treats everyday illnesses and provides general medical care",vi:"bác sĩ đa khoa",u:1},
+  {w:"duration",pos:"n",def:"the length of time that something lasts or continues",vi:"khoảng thời gian",u:1},
+  {w:"onset",pos:"n",def:"the beginning of something, especially something unpleasant",vi:"sự bắt đầu, sự khởi phát",u:1},
+  {w:"severity",pos:"n",def:"the fact or condition of something being extremely bad or serious",vi:"sự nghiêm trọng; mức độ nghiêm trọng",u:1},
+  {w:"trigger",pos:"n",def:"something that is the cause of a particular reaction or development, especially a bad one",vi:"yếu tố kích hoạt",u:1},
+  {w:"radiation",pos:"n",def:"the spreading out of energy, heat, etc.",vi:"sự lan ra",u:1},
+  {w:"character",pos:"n",def:"a particular quality or feature that a thing, an event or a place has",vi:"đặc điểm",u:1},
+  {w:"exacerbation",pos:"n",def:"the act of making something worse, especially a disease or problem",vi:"sự chuyển xấu; sự nặng thêm",u:1},
+  {w:"alleviation",pos:"n",def:"the act of making something less severe",vi:"sự nhẹ bớt, sự giảm bớt",u:1},
+  {w:"alleviate",pos:"v",def:"to make something less severe",vi:"làm dịu bớt; làm nhẹ đi",u:1},
+  {w:"site",pos:"n",def:"a place where something was, is or will be located",vi:"vị trí",u:1},
+  {w:"episode",pos:"n",def:"a period of time during which somebody is affected by a particular illness or a particular stage of a longer illness",vi:"đợt, cơn, giai đoạn",u:1},
+  {w:"constancy",pos:"n",def:"the quality of staying the same and not changing",vi:"sự không thay đổi; sự liên tục",u:1},
+  {w:"piercing",pos:"adj",def:"a quick, sharp pinch followed by a dull, throbbing sensation, primarily caused by nerve stimulation",vi:"đau xỏ khuyên: cảm giác nhói, buốt, nhanh",u:1},
+  {w:"boring",pos:"adj",def:"a persistent, deep, and intense discomfort that feels as if a long, slender, or twisting object is piercing the body",vi:"đau như dao đâm",u:1},
+  {w:"intense",pos:"adj",def:"serious, strong, extreme",vi:"mạnh mẽ, dữ dội",u:1},
+  {w:"aching",pos:"adj",def:"a continuous, dull, and unpleasant sensation, typically non-sharp and spread over a specific area",vi:"đau nhức kéo dài, đau âm ỉ",u:1},
+  {w:"scalding",pos:"adj",def:"an intense, burning sensation caused by contact with hot liquids or steam",vi:"đau rát như bỏng nước sôi; đau dữ dội, nóng rát",u:1},
+  {w:"burning",pos:"adj",def:'a sensation of intense, searing heat or fiery discomfort often described as a "stinging" or "scalding" sensation',vi:"đau nóng rát",u:1},
+  {w:"dull",pos:"adj",def:"a persistent, low-grade, non-piercing ache",vi:"đau nhức nhối, dai dẳng, âm ỉ",u:1},
+  {w:"persistent",pos:"adj",def:"continuing for a long period of time",vi:"dai dẳng",u:1},
+  {w:"vague",pos:"adj",def:"discomfort that is hard to localize, describe, or pinpoint",vi:"đau mơ hồ, âm ỉ, không rõ vị trí",u:1},
+  {w:"excruciating",pos:"adj",def:"extremely painful or bad",vi:"đau dữ dội, đau thấu xương, không thể chịu đựng nổi",u:1},
+  {w:"thunderclap",pos:"adj",def:'a severe, sudden-onset headache that reaches peak intensity within 60 seconds, commonly described as the "worst headache of your life"',vi:"đau đầu sấm sét; đau đầu dữ dội, đột ngột",u:1},
+  {w:"shooting",pos:"adj",def:"a sudden, intense, and sharp sensation that radiates along a nerve pathway, often described as an electric shock",vi:"đau nhói, đau buốt",u:1},
+  {w:"spasmodic",pos:"adj",def:"a type of intense, involuntary pain that occurs in sudden, irregular, or intermittent bursts",vi:"đau do co thắt/chuột rút; đau dữ dội",u:1},
+  {w:"crushing",pos:"adj",def:"a severe, intense, and often sudden sensation of pressure, squeezing, or compression, typically felt in the chest",vi:"cảm giác đau dữ dội, tức ngực như bị bóp chặt",u:1},
+  {w:"gripping",pos:"adj",def:"a sudden, sharp, and intense cramping or clutching sensation, typically in the stomach, abdomen, or bowels",vi:"đau thắt, đau quặn",u:1},
+  {w:"sciatica",pos:"n",def:"pain in the back, hip and outer side of the leg, caused by pressure on the sciatic nerve",vi:"đau thần kinh tọa",u:1},
+  {w:"ureteric colic",pos:"n",def:"severe pain in the stomach and bowels caused by a stone in the ureter",vi:"cơn đau quặn niệu quản",u:1},
+  {w:"pancreatitis",pos:"n",def:"inflammation of the pancreas",vi:"viêm tụy",u:1},
+  {w:"appendicitis",pos:"n",def:"inflammation of the appendix",vi:"viêm ruột thừa",u:1},
+  {w:"degenerative arthritis",pos:"n",def:"a condition where joint cartilage breaks down over time",vi:"thoái hóa khớp",u:1},
+  {w:"cluster headache",pos:"n",def:"a type of headache that occurs in clusters or groups",vi:"đau đầu cụm",u:1},
+  {w:"cystitis",pos:"n",def:"inflammation of the bladder",vi:"viêm bàng quang",u:1},
+  {w:"tension headache",pos:"n",def:"a headache caused by muscle tension or stress",vi:"đau đầu căng thẳng",u:1},
+  {w:"sub-arachnoid haemorrhage",pos:"n",def:"bleeding in the space between the brain and the surrounding membrane",vi:"xuất huyết dưới nhện",u:1},
+  {w:"angina pectoris",pos:"n",def:"severe pain in the chest caused by a low supply of blood to the heart during exercise because the arteries are partly blocked",vi:"đau thắt ngực",u:1},
+
+  // Unit 2
+  {w:"practice",pos:"n",def:"a healthcare setting where medical services are delivered, such as doctor's or clinic's practice",vi:"phòng khám",u:2},
+  {w:"register",pos:"v",def:"to record your/somebody's/something's name on an official list",vi:"đăng ký",u:2},
+  {w:"immunization",pos:"n",def:"the act of protecting a person or an animal from a disease, especially by giving them an injection of a vaccine",vi:"tiêm chủng",u:2},
+  {w:"antenatal",pos:"adj",def:"relating to the medical care given to pregnant women = prenatal",vi:"trước sinh",u:2},
+  {w:"postnatal",pos:"adj",def:"connected with the period after the birth of a child",vi:"sau sinh",u:2},
+  {w:"neonatal",pos:"adj",def:"relating to newborn children",vi:"sơ sinh",u:2},
+  {w:"housebound",pos:"adj",def:"unable to leave your house because you cannot walk very far as a result of being ill or old",vi:"không thể ra khỏi nhà",u:2},
+  {w:"discharge",pos:"v",def:"(from hospital) to allow somebody to leave hospital because they are well enough to leave",vi:"xuất viện",u:2},
+  {w:"dress wound",pos:"phrase",def:"to clean, treat and cover the wound",vi:"băng bó vết thương",u:2},
+  {w:"deprivation",pos:"n",def:"the fact of not having something that you need, like enough food, money or a home = poverty",vi:"sự thiếu thốn",u:2},
+  {w:"pronounced",pos:"adj",def:"very obvious, easy to notice or strongly expressed; evident",vi:"rõ rệt",u:2},
+  {w:"circulatory",pos:"adj",def:"relating to the movement of blood around the body",vi:"tuần hoàn",u:2},
+  {w:"mortality",pos:"n",def:"the number of deaths in a particular situation or period of time",vi:"tỷ lệ tử vong",u:2},
+  {w:"morbidity",pos:"n",def:"the fact of having a particular disease; the number of people who have a particular disease",vi:"tỷ lệ mắc bệnh",u:2},
+  {w:"chronic",pos:"adj",def:"lasting for a long time; difficult to cure",vi:"mãn tính",u:2},
+  {w:"acute",pos:"adj",def:"an acute illness is one that has quickly become severe and dangerous",vi:"cấp tính",u:2},
+  {w:"blocked nose",pos:"n",def:"stuffy nose, nasal congestion",vi:"nghẹt mũi",u:2},
+  {w:"temperature",pos:"n",def:"the measurement of how hot somebody's body is; abnormally high body heat",vi:"nhiệt độ; sốt",u:2},
+  {w:"tender",pos:"adj",def:"painful, sore or uncomfortable when touched",vi:"đau khi chạm vào",u:2},
+  {w:"sinus",pos:"n",def:"any of the hollow spaces in the bones of the head that are connected to the inside of the nose",vi:"xoang",u:2},
+  {w:"sinusitis",pos:"n",def:"inflammation of a nasal sinus",vi:"viêm xoang",u:2},
+  {w:"disparity",pos:"n",def:"a difference, especially one connected with unfair treatment",vi:"sự chênh lệch",u:2},
+  {w:"adverse",pos:"adj",def:"negative and unpleasant; bad, unfavorable",vi:"bất lợi",u:2},
+  {w:"incidence",pos:"n",def:"the rate at which something happens = occurrence",vi:"tỷ lệ mắc",u:2},
+  {w:"minor",pos:"adj",def:"not serious",vi:"nhẹ, không nghiêm trọng",u:2},
+  {w:"severe",pos:"adj",def:"extremely bad or serious",vi:"nghiêm trọng, dữ dội",u:2},
+  {w:"psychotic",pos:"adj",def:"affected or caused by a serious mental illness, in which somebody sees or hears things that are not there, or believes things that are not true",vi:"loạn thần",u:2},
+  {w:"plateau",pos:"n",def:"a time of little or no change after a period of growth or progress = level",vi:"giai đoạn ổn định",u:2},
+  {w:"breathlessness",pos:"n",def:"difficulty in breathing = shortness of breath / dyspnea",vi:"khó thở",u:2},
+  {w:"tachypnea",pos:"n",def:"a breathing rate that is higher than normal",vi:"thở nhanh",u:2},
+  {w:"prolonged",pos:"adj",def:"continuing for a long time",vi:"kéo dài",u:2},
+  {w:"expiration",pos:"n",def:"the act or process of releasing air from the lungs through the nose or mouth = exhalation",vi:"thở ra",u:2},
+  {w:"wheeze",pos:"v",def:"to breathe noisily and with difficulty",vi:"thở khò khè",u:2},
+  {w:"asthma",pos:"n",def:"a medical condition of the chest that makes breathing difficult",vi:"hen suyễn",u:2},
+  {w:"diarrhea",pos:"n",def:"an illness in which waste matter is emptied from the bowels much more frequently than normal, and in liquid form",vi:"tiêu chảy",u:2},
+  {w:"dehydration",pos:"n",def:"the condition of having lost too much water from your body",vi:"mất nước",u:2},
+  {w:"abdominal",pos:"adj",def:"relating to the abdomen (the part of the body below the chest that contains the stomach, bowels, etc.)",vi:"thuộc bụng",u:2},
+  {w:"crampy",pos:"adj",def:"relating to or causing cramps (painful involuntary spasmodic contraction of a muscle)",vi:"co thắt, quặn",u:2},
+  {w:"gastroenteritis",pos:"n",def:"inflammation of the stomach and the small intestine",vi:"viêm dạ dày ruột",u:2},
+];
+
+let vocab = [...ALL_VOCAB];
+let idx = 0;
+let mode = 'def';
+let unit = 'all';
+
+function setUnit(u) {
+  unit = u;
+  vocab = u === 'all' ? [...ALL_VOCAB] : ALL_VOCAB.filter(v => v.u === u);
+  idx = 0;
+  document.querySelectorAll('.unit-tabs button').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && u==='all') || (i===1 && u===1) || (i===2 && u===2));
+  });
+  render();
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-toggle button:not(.shuffle-btn)').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && m==='def') || (i===1 && m==='vi'));
+  });
+  render();
+}
+
+function shuffle() {
+  for (let i = vocab.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [vocab[i], vocab[j]] = [vocab[j], vocab[i]];
+  }
+  idx = 0;
+  render();
+}
+
+function flip() {
+  document.getElementById('card').classList.toggle('flipped');
+}
+
+function next() { if (idx < vocab.length - 1) { idx++; render(); } }
+function prev() { if (idx > 0) { idx--; render(); } }
+
+function render() {
+  const c = vocab[idx];
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  const front = document.getElementById('front');
+  const back = document.getElementById('back');
+
+  front.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})</div><div class="card-hint">tap to reveal</div>`;
+
+  if (mode === 'def') {
+    back.innerHTML = `<div class="card-def">${c.def}</div>`;
+  } else {
+    back.innerHTML = `<div class="card-word" style="font-size:1.3rem">${c.vi}</div>`;
+  }
+
+  document.getElementById('progress').textContent = `${idx + 1} / ${vocab.length}` + (unit === 'all' ? '' : ` — Unit ${unit}`);
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === vocab.length - 1;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') next();
+  else if (e.key === 'ArrowLeft') prev();
+  else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); }
+});
+
+let touchStartX = 0;
+document.getElementById('card').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, {passive:true});
+document.getElementById('card').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) { dx > 0 ? prev() : next(); }
+  else flip();
+});
+
+render();
+</script>
