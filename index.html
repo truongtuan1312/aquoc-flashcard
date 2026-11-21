@@ -31,7 +31,7 @@ body {
 }
 h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; margin: 0; }
 .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; flex-wrap: wrap; gap: 8px; }
-.unit-tabs { display: flex; gap: 6px; }
+.unit-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .unit-tabs button, .mode-toggle button {
   font-family: inherit; font-size: .8rem; font-weight: 500;
   border: 1px solid var(--border); background: var(--surface); color: var(--fg2);
@@ -42,7 +42,7 @@ h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5r
 }
 .mode-toggle { display: flex; gap: 6px; margin-bottom: 8px; }
 .progress { font-size: .8rem; color: var(--fg2); padding-bottom: 8px; font-variant-numeric: tabular-nums; }
-.card-area { flex: 1; display: flex; align-items: center; justify-content: center; perspective: 800px; padding: 8px 0 16px; }
+.card-area { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; perspective: 800px; padding: 8px 0 16px; }
 .card { width: 100%; max-width: 480px; min-height: 280px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform .45s ease; }
 .card.flipped { transform: rotateY(180deg); }
 .card-face {
@@ -56,14 +56,16 @@ h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5r
 .card-pos { font-size: .85rem; opacity: .6; margin-bottom: 4px; }
 .card-hint { font-size: .85rem; opacity: .55; margin-top: 12px; }
 .card-def { font-size: 1.05rem; line-height: 1.55; }
-.nav { display: flex; gap: 12px; justify-content: center; padding-block: 16px; }
-.nav button {
-  font-family: inherit; font-size: .9rem; font-weight: 500;
+.nav-btn {
+  flex: none; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  font-family: inherit; font-size: 1.2rem; line-height: 1;
   background: var(--surface); border: 1px solid var(--border); color: var(--fg);
-  padding: 10px 28px; border-radius: 10px; cursor: pointer; transition: all .15s;
+  border-radius: 50%; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent;
 }
-.nav button:hover { border-color: var(--accent); color: var(--accent); }
-.nav button:disabled { opacity: .3; cursor: default; }
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn:active { transform: scale(.92); }
+.nav-btn:disabled { opacity: .25; cursor: default; }
+@media (max-width: 520px) { .nav-btn { width: 38px; height: 38px; font-size: 1.05rem; } .card-area { gap: 6px; } }
 .shuffle-btn {
   font-family: inherit; font-size: .8rem; font-weight: 500;
   background: none; border: none; color: var(--accent); cursor: pointer; padding: 4px 0;
@@ -78,6 +80,14 @@ h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5r
     <button onclick="setUnit(2)">Unit 2</button>
     <button onclick="setUnit(3)">Unit 3</button>
     <button onclick="setUnit(4)">Unit 4</button>
+    <button onclick="setUnit(5)">Unit 5</button>
+    <button onclick="setUnit(6)">Unit 6</button>
+    <button onclick="setUnit(7)">Unit 7</button>
+    <button onclick="setUnit(8)">Unit 8</button>
+    <button onclick="setUnit(9)">Unit 9</button>
+    <button onclick="setUnit(10)">Unit 10</button>
+    <button onclick="setUnit(11)">Unit 11</button>
+    <button onclick="setUnit(12)">Unit 12</button>
   </div>
 </div>
 <div class="mode-toggle">
@@ -91,14 +101,12 @@ h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5r
 </div>
 <div class="progress" id="progress"></div>
 <div class="card-area">
+  <button class="nav-btn" id="prevBtn" onclick="prev()" aria-label="Previous card">&#8249;</button>
   <div class="card" id="card" onclick="flip()">
     <div class="card-face card-front" id="front"></div>
     <div class="card-face card-back" id="back"></div>
   </div>
-</div>
-<div class="nav">
-  <button id="prevBtn" onclick="prev()">&#8592; Prev</button>
-  <button id="nextBtn" onclick="next()">Next &#8594;</button>
+  <button class="nav-btn" id="nextBtn" onclick="next()" aria-label="Next card">&#8250;</button>
 </div>
 
 <script>
@@ -271,6 +279,208 @@ const ALL_VOCAB = [
   {w:"advance",pos:"v",def:"to move forward",vi:"tiến lên",u:4},
   {w:"sedate",pos:"v",def:"to give somebody drugs in order to make them calm and/or to make them sleep",vi:"cho bệnh nhân dùng thuốc an thần",u:4},
   {w:"biopsy",pos:"n",def:"a sample taken for pathological examination; the act of taking such a sample",vi:"sinh thiết",u:4},
+  // Unit 5
+  {w:"intravenous",pos:"adj",def:"(of drugs or food) going into a vein",vi:"trong tĩnh mạch",u:5},
+  {w:"intramuscular",pos:"adj",def:"happening inside a muscle or put into a muscle",vi:"tiêm bắp",u:5},
+  {w:"subcutaneous",pos:"adj",def:"under the skin",vi:"dưới da",u:5},
+  {w:"cutaneous",pos:"adj",def:"relating to the skin",vi:"liên quan đến da",u:5},
+  {w:"rectum",pos:"n",def:"the end section of the tube where food waste collects before leaving the body through the anus",vi:"trực tràng",u:5},
+  {w:"inhalation",pos:"n",def:"an act of taking air, smoke, gas, etc. into your lungs as you breathe",vi:"hít vào",u:5},
+  {w:"exhalation",pos:"n",def:"an act of breathing out the air or smoke that is in your lungs; an amount of air or smoke that you breathe out",vi:"thở ra",u:5},
+  {w:"nebuliser",pos:"n",def:"a device for producing a fine spray of liquid, used especially for taking particular medicines",vi:"máy khí dung",u:5},
+  {w:"appropriate",pos:"adj",def:"suitable, acceptable or correct for the particular circumstances",vi:"phù hợp",u:5},
+  {w:"appropriateness",pos:"n",def:"the quality of being suitable, acceptable or correct for the particular circumstances",vi:"sự phù hợp",u:5},
+  {w:"deny",pos:"v",def:"to refuse to admit or accept something",vi:"phủ nhận",u:5},
+  {w:"denial",pos:"n",def:"the act of refusing to accept that something unpleasant or painful is true",vi:"sự phủ nhận",u:5},
+  {w:"confusion",pos:"n",def:"a state of not being certain about what is happening, what you should do, what something means, etc.",vi:"sự nhầm lẫn, lẫn lộn",u:5},
+  {w:"complementary",pos:"adj",def:"balanced",vi:"cân bằng",u:5},
+  {w:"intervention",pos:"n",def:"action taken to improve a medical condition or illness",vi:"sự can thiệp",u:5},
+  {w:"impart",pos:"v",def:"to pass information, knowledge, etc. to other people",vi:"truyền đạt, phổ biến",u:5},
+  {w:"self-efficacy",pos:"n",def:"a person's belief in their ability to complete a task or achieve a goal",vi:"tự tin vào năng lực bản thân",u:5},
+  {w:"autonomy",pos:"n",def:"the ability to act and make decisions without being controlled by anyone else",vi:"sự tự chủ",u:5},
+  {w:"beneficial",pos:"adj",def:"having a helpful or useful effect",vi:"có ích, có lợi",u:5},
+  {w:"adverse",pos:"adj",def:"not likely to produce a good result",vi:"xấu, tiêu cực",u:5},
+  {w:"outcome",pos:"n",def:"the result or effect of an action or event",vi:"kết quả",u:5},
+  {w:"generate",pos:"v",def:"to produce or create something",vi:"tạo ra",u:5},
+  {w:"cost-effective",pos:"adj",def:"a way of saving money, or of spending less money",vi:"có hiệu quả kinh tế",u:5},
+  // Unit 6
+  {w:"compliance",pos:"n",def:"the practice of obeying rules or requests made by people in authority",vi:"tuân thủ",u:6},
+  {w:"non-compliance",pos:"n",def:"failure to obey rules or requests made by people in authority",vi:"không tuân thủ",u:6},
+  {w:"therapy",pos:"n",def:"the treatment of a physical problem or an illness",vi:"sự điều trị, liệu pháp",u:6},
+  {w:"therapeutic",pos:"adj",def:"relating to the treatment of a physical problem or an illness",vi:"thuộc về điều trị",u:6},
+  {w:"preventive medicine",pos:"n",def:"the practice of promoting preventive health care to improve patient well-being",vi:"y học dự phòng",u:6},
+  {w:"regime",pos:"n",def:"a method or system of organizing or managing something; a set of rules about food and exercise or medical treatment that you follow in order to stay healthy or to improve your health",vi:"chế độ",u:6},
+  {w:"symptom",pos:"n",def:"a change in your body or mind that shows that you are not healthy",vi:"triệu chứng",u:6},
+  {w:"symptomless",pos:"adj",def:"showing no symptoms of an illness",vi:"không có triệu chứng",u:6},
+  {w:"take up",pos:"v",def:"to learn or start to do something, especially for pleasure",vi:"bắt đầu làm (một việc gì đó)",u:6},
+  {w:"kick",pos:"v",def:"to stop doing something harmful that you have done for a long time",vi:"từ bỏ (thói quen xấu)",u:6},
+  {w:"stick to",pos:"v",def:"to continue doing something despite difficulties",vi:"kiên trì với",u:6},
+  {w:"settle into",pos:"v",def:"to start to feel comfortable",vi:"bắt đầu quen với",u:6},
+  {w:"devise",pos:"v",def:"to invent something new or a new way of doing something",vi:"nghĩ ra, sáng chế",u:6},
+  {w:"epidemic",pos:"n",def:"a large number of cases of a particular disease or medical condition happening at the same time in a particular community",vi:"dịch bệnh",u:6},
+  {w:"pandemic",pos:"n",def:"a disease that spreads over a whole country or the whole world",vi:"đại dịch",u:6},
+  {w:"exceed",pos:"v",def:"to be greater than a particular number or amount",vi:"vượt quá",u:6},
+  {w:"implement",pos:"v",def:"to make something that has been officially decided start to happen or be used (= carry out)",vi:"thực hiện, triển khai",u:6},
+  {w:"implication",pos:"n",def:"something that is suggested",vi:"hàm ý, điều ngụ ý",u:6},
+  {w:"adjust",pos:"v",def:"to change something slightly",vi:"điều chỉnh",u:6},
+  {w:"category",pos:"n",def:"a group of people or things with particular features in common (= class)",vi:"loại, hạng mục",u:6},
+  // Unit 6
+  {w:"Diabetes",pos:"n",ipa:"/ˌdaɪəˈbiːtiːz/",def:"a disease in which the body cannot control the amount of sugar in the blood",vi:"bệnh tiểu đường",u:6},
+  {w:"Cardiovascular disease",pos:"n",ipa:"/ˌkɑːdiəʊˈvæskjələ dɪˈziːz/",def:"a medical condition affecting the heart or blood vessels",vi:"bệnh tim mạch",u:6},
+  {w:"Associated illnesses",pos:"n",ipa:"/əˈsəʊʃieɪtɪd ˈɪlnəsɪz/",def:"medical conditions related to or caused by a primary disease",vi:"các bệnh có liên quan",u:6},
+  {w:"Implement a programme",pos:"v phr",ipa:"/ˈɪmplɪment ə ˈprəʊɡræm/",def:"to put a plan or system into operation",vi:"thực hiện một chương trình/kế hoạch",u:6},
+  {w:"Reduce the impacts",pos:"v phr",ipa:"/rɪˈdjuːs ðə ˈɪmpækts/",def:"to make the effects or results of something less severe",vi:"làm giảm các tác động",u:6},
+  {w:"Promote healthy weight",pos:"v phr",ipa:"/prəˈməʊt ˈhelθi weɪt/",def:"to encourage and support maintaining a body weight that is good for health",vi:"khuyến khích mức cân nặng tốt cho sức khỏe",u:6},
+  {w:"Be classified as",pos:"v phr",ipa:"/bi ˈklæsɪfaɪd æz/",def:"to be divided into a particular group or category",vi:"được phân loại là",u:6},
+  {w:"Body Mass Index (BMI)",pos:"n",ipa:"/ˈbɒdi mæs ˈɪndeks/",def:"a measure of body fat based on height and weight",vi:"chỉ số khối cơ thể",u:6},
+  {w:"Age-standardized data",pos:"n",ipa:"/eɪdʒ ˈstændədaɪzd ˈdeɪtə/",def:"rates or data adjusted to account for differences in population age structure",vi:"số liệu chuẩn hóa theo độ tuổi",u:6},
+  {w:"National health survey",pos:"n",ipa:"/ˈnæʃnəl helθ ˈsɜːveɪ/",def:"an official study collecting health information about a country's population",vi:"cuộc điều tra/thống kê sức khỏe quốc gia",u:6},
+  {w:"Conduct",pos:"v",ipa:"/kənˈdʌkt/",def:"to organize and perform a particular activity or study",vi:"thực hiện, tiến hành",u:6},
+  {w:"Self-perception",pos:"n",ipa:"/ˌself pəˈsepʃn/",def:"the way a person views or thinks about themselves",vi:"sự tự nhận thức / tự nhận thấy",u:6},
+  // Unit 7
+  {w:"paediatrician",pos:"n",ipa:"/ˌpiːdiəˈtrɪʃn/",def:"a doctor who specializes in the care of children",vi:"bác sĩ Nhi khoa",u:7},
+  {w:"specialize in",pos:"v phr",ipa:"/ˈspeʃəlaɪz ɪn/",def:"to spend most of one's time studying or working on a specific subject",vi:"chuyên về",u:7},
+  {w:"bring up",pos:"v phr",ipa:"/brɪŋ ʌp/",def:"to care for a child until they are an adult",vi:"nuôi nâng, chăm sóc trẻ",u:7},
+  {w:"empathize with",pos:"v phr",ipa:"/ˈempəθaɪz wɪð/",def:"to understand and share another person's feelings",vi:"đồng cảm, thông cảm với",u:7},
+  {w:"parental fear",pos:"n",ipa:"/pəˈrentl fɪər/",def:"anxiety or concern felt by parents regarding their children",vi:"nỗi lo của cha mẹ",u:7},
+  {w:"potential threats",pos:"n",ipa:"/pəˈtenʃl θrets/",def:"possible dangers or risks to health or safety",vi:"các nguy cơ/mối đe dọa tiềm ẩn",u:7},
+  {w:"infant diseases",pos:"n",ipa:"/ˈɪnfənt dɪˈziːzɪz/",def:"illnesses that commonly affect babies or young children",vi:"các bệnh ở trẻ sơ sinh và trẻ nhỏ",u:7},
+  {w:"infectious parotitis",pos:"n",ipa:"/ɪnˈfekʃəs pærəˈtaɪtɪs/",def:"mumps; a viral infection causing painful swelling of the salivary glands",vi:"bệnh quai bị",u:7},
+  {w:"varicella",pos:"n",ipa:"/ˌværɪˈselə/",def:"chickenpox; an infectious disease causing a fever and itchy red spots",vi:"bệnh thủy đậu",u:7},
+  {w:"morbilli / rubeola",pos:"n",ipa:"/mɔːˈbɪlaɪ/ / /ruːbiˈəʊlə/",def:"measles; an infectious disease causing fever and red spots on the skin",vi:"bệnh sởi",u:7},
+  {w:"pertussis",pos:"n",ipa:"/pəˈtʌsɪs/",def:"whooping cough; a severe contagious bacterial infection of the lungs",vi:"bệnh ho gà",u:7},
+  {w:"acute laryngotracheobronchitis",pos:"n",ipa:"/əˈkjuːt ləˌrɪŋɡəʊˌtreɪkiəʊbrɒŋˈkaɪtɪs/",def:"croup; an inflammation of the larynx, trachea, and bronchi in young children",vi:"viêm thanh khí phế quản cấp",u:7},
+  {w:"meningitis",pos:"n",ipa:"/ˌmenɪnˈdʒaɪtɪs/",def:"a serious infection causing inflammation of the membranes surrounding the brain and spinal cord",vi:"bệnh viêm màng não",u:7},
+  {w:"poliomyelitis / polio",pos:"n",ipa:"/ˌpəʊliəʊˌmaɪəˈlaɪtɪs/ / /ˈpəʊliəʊ/",def:"an infectious viral disease affecting the nervous system that can cause paralysis",vi:"bệnh bại liệt",u:7},
+  {w:"tetanus",pos:"n",ipa:"/ˈtetənəs/",def:"a serious bacterial infection causing severe muscle stiffness and spasms",vi:"bệnh uốn ván",u:7},
+  {w:"diphtheria",pos:"n",ipa:"/dɪfˈθɪəriə/",def:"a serious contagious bacterial disease causing inflammation of the mucous membranes",vi:"bệnh bạch hầu",u:7},
+  {w:"Focal neurologic signs",pos:"n",ipa:"/ˈfəʊkl ˌnjʊərəˈlɒdʒɪk saɪnz/",def:"impairments of brain or spinal cord function affecting a specific body region",vi:"dấu hiệu thần kinh khu trú",u:7},
+  {w:"patient",pos:"adj",ipa:"/ˈpeɪʃnt/",def:"able to remain calm and accept delays or problems without becoming angry",vi:"kiên nhẫn",u:7},
+  {w:"impatient",pos:"adj",ipa:"/ɪmˈpeɪʃnt/",def:"easily annoyed by delay or lack of progress",vi:"thiếu kiên nhẫn",u:7},
+  {w:"diffident",pos:"adj",ipa:"/ˈdɪfɪdənt/",def:"shy and lacking confidence in one's own abilities",vi:"nhút nhát, thiếu tự tin",u:7},
+  {w:"confident",pos:"adj",ipa:"/ˈkɒnfɪdənt/",def:"feeling sure of oneself and one's abilities",vi:"tự tin",u:7},
+  {w:"efficient",pos:"adj",ipa:"/ɪˈfɪʃnt/",def:"working well and quickly without wasting time or energy",vi:"có năng lực, hiệu quả",u:7},
+  {w:"reliable",pos:"adj",ipa:"/rɪˈlaɪəbl/",def:"able to be trusted or believed",vi:"đáng tin cậy",u:7},
+  {w:"unreliable",pos:"adj",ipa:"/ˌʌnrɪˈlaɪəbl/",def:"not able to be trusted or depended on",vi:"không đáng tin cậy",u:7},
+  {w:"sensitive",pos:"adj",ipa:"/ˈsensətɪv/",def:"understanding and aware of other people's feelings",vi:"nhạy cảm, tinh tế",u:7},
+  {w:"insensitive",pos:"adj",ipa:"/ɪnˈsensətɪv/",def:"not noticing or caring about other people's feelings",vi:"thiếu tinh tế, vô cảm",u:7},
+  {w:"honest",pos:"adj",ipa:"/ˈɒnɪst/",def:"telling the truth and not hiding things",vi:"trung thực",u:7},
+  {w:"respectful",pos:"adj",ipa:"/rɪˈspektfl/",def:"showing politeness and care towards someone",vi:"tôn trọng",u:7},
+  {w:"disrespectful",pos:"adj",ipa:"/ˌdɪsrɪˈspektfl/",def:"showing a lack of respect for someone or something",vi:"thiếu tôn trọng",u:7},
+  {w:"recommendation",pos:"n",ipa:"/ˌrekəmenˈdeɪʃn/",def:"advice or a suggestion about what is best to do",vi:"lời khuyên, khuyến cáo",u:7},
+  {w:"immunization",pos:"n",ipa:"/ˌɪmjənaɪˈzeɪʃn/",def:"the process of protecting someone against a disease by vaccination",vi:"sự tiêm chủng / miễn dịch",u:7},
+  {w:"eligible",pos:"adj",ipa:"/ˈelɪdʒəbl/",def:"having the right qualifications or meeting conditions to receive something",vi:"đủ điều kiện, thích hợp",u:7},
+  {w:"seroconvert to",pos:"v phr",ipa:"/ˌsɪərəʊkənˈvɜːt tuː/",def:"to produce specific antibodies in response to a vaccine or infection",vi:"tạo kháng thể huyết thanh",u:7},
+  {w:"MMR",pos:"n",ipa:"/ˌem em ˈɑːr/",def:"abbreviation for Measles, Mumps, and Rubella vaccine",vi:"vắc-xin sởi-quai bị-rubella",u:7},
+  {w:"antibody",pos:"n",ipa:"/ˈæntibɒdi/",def:"a protein produced by the body to fight disease and infection",vi:"kháng thể",u:7},
+  {w:"pre-license studies",pos:"n",ipa:"/priː ˈlaɪsns ˈstʌdiz/",def:"clinical trials conducted before a medical product is officially authorized",vi:"các nghiên cứu trước khi cấp phép",u:7},
+  {w:"confer",pos:"v",ipa:"/kənˈfɜːr/",def:"to give or grant a quality, benefit, or protection",vi:"ban cho, mang lại (kháng thể/bảo vệ)",u:7},
+  {w:"a dose",pos:"n",ipa:"/ə dəʊs/",def:"a measured quantity of a medicine or vaccine",vi:"một liều thuốc / vắc-xin",u:7},
+  {w:"effective against",pos:"adj phr",ipa:"/ɪˈfektɪv əˈɡenst/",def:"successful in producing a desired result against a disease",vi:"có hiệu quả chống lại",u:7},
+  {w:"irrespective of",pos:"prep",ipa:"/ˌɪrɪˈspektɪv əv/",def:"regardless of; without considering",vi:"bất kể, không tính đến",u:7},
+  {w:"optimal",pos:"adj",ipa:"/ˈɒptɪml/",def:"best or most favorable",vi:"tối ưu, tốt nhất",u:7},
+  {w:"endemic country",pos:"n",ipa:"/enˈdemɪk ˈkʌntri/",def:"a country where a particular disease is regularly found among people",vi:"quốc gia có dịch bệnh lưu hành",u:7},
+  {w:"an outbreak",pos:"n",ipa:"/ən ˈaʊtbreɪk/",def:"a sudden appearance or start of something unpleasant, such as a disease",vi:"sự bùng phát dịch bệnh",u:7},
+  {w:"pre-existing immunity",pos:"n",ipa:"/ˌpriː ɪɡˈzɪstɪŋ ɪˈmjuːnəti/",def:"protection against an infection already present before exposure",vi:"miễn dịch có sẵn",u:7},
+  {w:"at appropriate intervals",pos:"phrase",ipa:"/æt əˈprəʊpriət ˈɪntəvlz/",def:"at suitable time gaps between actions or doses",vi:"vào những mốc/khoảng thời gian thích hợp",u:7},
+  {w:"response rate",pos:"n",ipa:"/rɪˈspɒns reɪt/",def:"the percentage of subjects who react as expected to a vaccine or treatment",vi:"tỉ lệ đáp ứng/phản ứng",u:7},
+  // Unit 8
+  {w:"preventive measure",pos:"n",ipa:"/prɪˈventɪv ˈmeʒə/",def:"an action taken to stop something bad from happening",vi:"biện pháp phòng ngừa",u:8},
+  {w:"immune to",pos:"adj phr",ipa:"/ɪˈmjuːn tuː/",def:"protected against a disease or unaffected by something",vi:"miễn nhiễm với",u:8},
+  {w:"understanding",pos:"n",ipa:"/ˌʌndəˈstændɪŋ/",def:"knowledge or comprehension about a subject",vi:"sự hiểu biết",u:8},
+  {w:"old-fashioned",pos:"adj",ipa:"/ˌəʊld ˈfæʃnd/",def:"not modern; belonging to a past style or time",vi:"lỗi thời, cổ điển",u:8},
+  {w:"tailor advice",pos:"v phr",ipa:"/ˈteɪlə ədˈvaɪs/",def:"to adapt medical guidance to fit individual needs",vi:"điều chỉnh lời khuyên cho phù hợp",u:8},
+  {w:"devastating",pos:"adj",ipa:"/ˈdevəsteɪtɪŋ/",def:"causing severe shock, distress, or damage",vi:"tàn phá, gây hậu quả nghiêm trọng",u:8},
+  {w:"fate",pos:"n",ipa:"/feɪt/",def:"a power that is believed to control what happens in the future",vi:"số phận, định mệnh",u:8},
+  {w:"over-enthusiastic",pos:"adj",ipa:"/ˌəʊvər ɪnˌθjuːziˈæstɪk/",def:"excessively eager or enthusiastic",vi:"quá nhiệt tình",u:8},
+  {w:"intimidating",pos:"adj",ipa:"/ɪnˈtɪmɪdeɪtɪŋ/",def:"making someone feel frightened or nervous",vi:"mang tính đe dọa, làm hoảng sợ",u:8},
+  {w:"barrier",pos:"n",ipa:"/ˈbærɪə/",def:"a problem or rule that prevents progress or communication",vi:"rào cản, trở ngại",u:8},
+  {w:"provoke anger",pos:"v phr",ipa:"/prəˈvəʊk ˈæŋɡə/",def:"to cause a strong feeling of annoyance or hostility",vi:"gây ra/dấy lên sự tức giận",u:8},
+  {w:"rejection",pos:"n",ipa:"/rɪˈdʒekʃn/",def:"refusal to accept, use, or believe something",vi:"sự từ chối, khước từ",u:8},
+  {w:"resent",pos:"v",ipa:"/rɪˈzent/",def:"to feel angry because you have been forced to accept something",vi:"phẫn nộ, bực bội",u:8},
+  {w:"trust",pos:"v / n",ipa:"/trʌst/",def:"to believe that someone is good and honest",vi:"tin tưởng / sự tin tưởng",u:8},
+  {w:"persuade",pos:"v",ipa:"/pəˈsweɪd/",def:"to convince someone to do or believe something",vi:"thuyết phục",u:8},
+  {w:"wayward",pos:"adj",ipa:"/ˈweɪwəd/",def:"difficult to control or predict; headstrong",vi:"cứng đầu, khó bảo",u:8},
+  {w:"clarity",pos:"n",ipa:"/ˈklærəti/",def:"the quality of being clear and easy to understand",vi:"sự rõ ràng, minh bạch",u:8},
+  {w:"future self",pos:"n",ipa:"/ˈfjuːtʃə self/",def:"a person's image or concept of who they will be in the future",vi:"bản thân trong tương lai",u:8},
+  {w:"at times",pos:"adv phr",ipa:"/æt taɪmz/",def:"sometimes; occasionally",vi:"đôi khi, thỉnh thoảng",u:8},
+  {w:"prone to",pos:"adj phr",ipa:"/prəʊn tuː/",def:"likely to suffer from or do something undesirable",vi:"có xu hướng, dễ mắc phải",u:8},
+  {w:"promote",pos:"v",ipa:"/prəˈməʊt/",def:"to encourage people to like, buy, use, or do something",vi:"thúc đẩy, nâng cao",u:8},
+  {w:"bring out",pos:"v phr",ipa:"/brɪŋ aʊt/",def:"to produce or cause a particular quality or result",vi:"gây ra, làm lộ ra",u:8},
+  {w:"destruction",pos:"n",ipa:"/dɪˈstrʌkʃn/",def:"the action of damaging something so badly that it cannot be repaired",vi:"sự hủy hoại, tàn phá",u:8},
+  {w:"substance",pos:"n",ipa:"/ˈsʌbstəns/",def:"a physical material or chemical matter",vi:"chất, hoạt chất",u:8},
+  {w:"appeal",pos:"n",ipa:"/əˈpiːl/",def:"the quality of being attractive or interesting",vi:"sự thu hút, sức hấp dẫn",u:8},
+  {w:"frame of mind",pos:"n",ipa:"/freɪm əv maɪnd/",def:"a person's mood or attitude at a particular time",vi:"tâm trạng, trạng thái tâm lý",u:8},
+  {w:"sordid",pos:"adj",ipa:"/ˈsɔːdɪd/",def:"dirty, unpleasant, or lacking moral standards",vi:"không lành mạnh, xấu xa",u:8},
+  {w:"involve",pos:"v",ipa:"/ɪnˈvɒlv/",def:"to include someone or something as a necessary part",vi:"bao gồm, liên quan đến",u:8},
+  {w:"moderate (drinker)",pos:"adj / n",ipa:"/ˈmɒdərət/",def:"drinking reasonable amounts of alcohol without excessive intake",vi:"người uống rượu vừa phải",u:8},
+  {w:"binge (drinking)",pos:"n",ipa:"/bɪndʒ/",def:"drinking excessive amounts of alcohol in a short period of time",vi:"việc uống rượu say sưa/nhiều",u:8},
+  {w:"social (drinker)",pos:"adj / n",ipa:"/ˈsəʊʃl/",def:"a person who drinks alcohol only on social occasions",vi:"người chỉ uống rượu khi giao lưu",u:8},
+  {w:"heavy (drinker)",pos:"adj / n",ipa:"/ˈhevi/",def:"a person who regularly drinks large amounts of alcohol",vi:"người uống rượu nặng tay/nhiều",u:8},
+  {w:"guilty",pos:"adj",ipa:"/ˈɡɪlti/",def:"feeling remorse or regret for doing something wrong",vi:"cảm thấy có lỗi, tội lỗi",u:8},
+  {w:"annoyed",pos:"adj",ipa:"/əˈnɔɪd/",def:"slightly angry or irritated",vi:"bực mình, khó chịu",u:8},
+  {w:"teetotal",pos:"adj",ipa:"/ˌtiːˈtəʊtl/",def:"never drinking alcohol",vi:"hoàn toàn không uống rượu",u:8},
+  // Unit 9
+  {w:"aggressiveness",pos:"n",ipa:"/əˈɡresɪvnəs/",def:"angry and threatening behaviour",vi:"sự hung hăng",u:9},
+  {w:"restlessness",pos:"n",ipa:"/ˈrestləsnəs/",def:"state of being unable to stay still due to boredom or anxiety",vi:"sự thao thức, không yên",u:9},
+  {w:"withdrawal",pos:"n",ipa:"/wɪθˈdrɔːəl/",def:"behaviour of somebody wanting to be alone and avoid social contact",vi:"sự xa lánh, rút lui xã hội",u:9},
+  {w:"distraction",pos:"n",ipa:"/dɪˈstrækʃn/",def:"a thing that takes attention away from what one is doing",vi:"sự sao nhãng, xao nhãng",u:9},
+  {w:"flamboyance",pos:"n",ipa:"/flæmˈbɔɪəns/",def:"brightly coloured, noticeable, and confident behavior",vi:"sự phô trương, sặc sỡ",u:9},
+  {w:"anxiety",pos:"n",ipa:"/æŋˈzaɪəti/",def:"state of feeling nervous or worried about future events",vi:"sự lo lắng, âu lo",u:9},
+  {w:"carelessness",pos:"n",ipa:"/ˈkerləsnəs/",def:"lack of attention and thought while doing something",vi:"sự bất cẩn",u:9},
+  // Unit 10
+  {w:"palliative care",pos:"n",ipa:"/ˈpæliətɪv keə/",def:"medical care focused on relieving symptoms and stress of serious illness",vi:"chăm sóc giảm nhẹ",u:10},
+  {w:"pain clinic",pos:"n",ipa:"/peɪn ˈklɪnɪk/",def:"a specialized healthcare facility for diagnosing and managing chronic pain",vi:"phòng khám điều trị đau",u:10},
+  {w:"Marie Curie nurse",pos:"n",ipa:"/məˈriː kjʊəri nɜːs/",def:"a specialist nurse providing end-of-life care in patients' homes",vi:"y tá chăm sóc bệnh nhân giai đoạn cuối Marie Curie",u:10},
+  {w:"Macmillan nurse",pos:"n",ipa:"/məkˈmɪlən nɜːs/",def:"a specialist nurse who provides advice and support to cancer patients",vi:"y tá chuyên khoa hỗ trợ bệnh nhân ung thư Macmillan",u:10},
+  {w:"breaking bad news",pos:"n phr",ipa:"/ˈbreɪkɪŋ bæd njuːz/",def:"communicating difficult or distressing medical information to patients or families",vi:"việc thông báo tin xấu",u:10},
+  // Unit 11
+  {w:"offensive",pos:"adj",ipa:"/əˈfensɪv/",def:"causing someone to feel upset, insulted, or annoyed",vi:"xúc phạm, gây khó chịu",u:11},
+  {w:"rude",pos:"adj",ipa:"/ruːd/",def:"not polite; offensive or impolite in behavior",vi:"thô lỗ, bất lịch sự",u:11},
+  {w:"friendly",pos:"adj",ipa:"/ˈfrendli/",def:"behaving in a pleasant, kind way towards someone",vi:"thân thiện",u:11},
+  {w:"sociable",pos:"adj",ipa:"/ˈsəʊʃəbl/",def:"enjoying spending time with other people",vi:"hòa đồng, cởi mở",u:11},
+  {w:"reserved",pos:"adj",ipa:"/rɪˈzɜːvd/",def:"slow to reveal emotion or opinion; quiet",vi:"kín đáo, dè dặt",u:11},
+  {w:"ambitious",pos:"adj",ipa:"/æmˈbɪʃəs/",def:"having a strong desire to succeed or achieve goals",vi:"tham vọng, giàu hoài bão",u:11},
+  {w:"determined",pos:"adj",ipa:"/dɪˈtɜːmɪnd/",def:"showing firmness of purpose; resolute",vi:"quyết đoán, kiên định",u:11},
+  {w:"modest",pos:"adj",ipa:"/ˈmɒdɪst/",def:"not talking too much about one's own abilities or achievements",vi:"khiêm tốn",u:11},
+  {w:"abrupt",pos:"adj",ipa:"/əˈbrʌpt/",def:"sudden and unexpected, or brief to the point of rudeness",vi:"cộc lốc, đột ngột",u:11},
+  {w:"blunt",pos:"adj",ipa:"/blʌnt/",def:"saying what you think without trying to be polite",vi:"thẳng thừng, huỵch tẹt",u:11},
+  {w:"thoughtful",pos:"adj",ipa:"/ˈθɔːtfl/",def:"showing consideration for the needs of other people",vi:"chu đáo, ân cần",u:11},
+  {w:"kind",pos:"adj",ipa:"/kaɪnd/",def:"generous, helpful, and caring towards others",vi:"tử tế, tốt bụng",u:11},
+  {w:"cruel",pos:"adj",ipa:"/ˈkruːəl/",def:"willfully causing pain or suffering to others",vi:"tàn nhẫn, dã man",u:11},
+  {w:"easy-going",pos:"adj",ipa:"/ˌiːzi ˈɡəʊɪŋ/",def:"relaxed and happy to accept things without getting angry",vi:"dễ tính, thoải mái",u:11},
+  {w:"relaxed",pos:"adj",ipa:"/rɪˈlækst/",def:"calm and not worried or anxious",vi:"thoải mái, thư thái",u:11},
+  {w:"strict",pos:"adj",ipa:"/strɪkt/",def:"demanding that rules are obeyed and observed",vi:"nghiêm khắc",u:11},
+  {w:"calm",pos:"adj",ipa:"/kɑːm/",def:"peaceful, quiet, and free from worry or excitement",vi:"bình tĩnh, êm đềm",u:11},
+  {w:"carefree",pos:"adj",ipa:"/ˈkeəfriː/",def:"free from worries or responsibilities",vi:"thảnh thơi, không lo âu",u:11},
+  {w:"cheerful",pos:"adj",ipa:"/ˈtʃɪəfl/",def:"noticeably happy and optimistic",vi:"vui vẻ, phơi phới",u:11},
+  {w:"lively",pos:"adj",ipa:"/ˈlaɪvli/",def:"full of life and energy; active",vi:"sống động, hăng hái",u:11},
+  {w:"team spirit",pos:"n",ipa:"/tiːm ˈspɪrɪt/",def:"willingness of people to work together as a team",vi:"tinh thần đồng đội",u:11},
+  {w:"close cooperation",pos:"n",ipa:"/kləʊs kəʊˌɒpəˈreɪʃn/",def:"working together very closely to achieve a shared goal",vi:"sự hợp tác chặt chẽ",u:11},
+  {w:"multidisciplinary team",pos:"n",ipa:"/ˌmʌltiˌdɪsəˈplɪnəri tiːm/",def:"a group of professionals from different fields working together",vi:"đội ngũ đa chuyên khoa",u:11},
+  {w:"practical support",pos:"n",ipa:"/ˈpræktɪkl səˈpɔːt/",def:"useful help with real problems or daily tasks",vi:"sự hỗ trợ thực tế",u:11},
+  {w:"key role",pos:"n",ipa:"/kiː rəʊl/",def:"an essential or very important position/function",vi:"vai trò quan trọng",u:11},
+  {w:"collective responsibility",pos:"n",ipa:"/kəˈlektɪv rɪˌspɒnsəˈbɪləti/",def:"shared responsibility of all group members for actions taken",vi:"trách nhiệm tập thể",u:11},
+  {w:"close partnership",pos:"n",ipa:"/kləʊs ˈpɑːtnəʃɪp/",def:"a strong and tight collaborative relationship",vi:"mối quan hệ đối tác chặt chẽ",u:11},
+  // Unit 12
+  {w:"phlebotomist",pos:"n",ipa:"/fləˈbɒtəmɪst/",def:"a healthcare professional trained to draw blood from patients",vi:"kỹ thuật viên lấy máu",u:12},
+  {w:"re-qualification",pos:"n",ipa:"/ˌriːˌkwɒlɪfɪˈkeɪʃn/",def:"the process of qualifying again to practice a profession in another place",vi:"sự thi lại / cấp lại chứng chỉ hành nghề",u:12},
+  {w:"PLAB",pos:"n",ipa:"/ˈplæb/",def:"Professional and Linguistic Assessment Board test for international doctors in the UK",vi:"bài kiểm tra đánh giá chuyên môn & ngôn ngữ",u:12},
+  {w:"GMC",pos:"n",ipa:"/ˌdʒiː em ˈsiː/",def:"General Medical Council; the regulatory body for doctors in the UK",vi:"Hội đồng Y khoa Quốc gia Anh",u:12},
+  {w:"demonstrate",pos:"v",ipa:"/ˈdemənstreɪt/",def:"to show clearly by giving proof or evidence",vi:"thể hiện, chứng minh",u:12},
+  {w:"outcome",pos:"n",ipa:"/ˈaʊtkʌm/",def:"the final result or effect of an action or event",vi:"kết quả, đầu ra",u:12},
+  {w:"perspective",pos:"n",ipa:"/pəˈspektɪv/",def:"a particular attitude towards or way of regarding something",vi:"góc nhìn, quan điểm",u:12},
+  {w:"appreciate",pos:"v",ipa:"/əˈpriːʃieɪt/",def:"to recognize the full value, quality, or significance of something",vi:"đánh giá cao, thấu hiểu giá trị",u:12},
+  {w:"respect",pos:"v / n",ipa:"/rɪˈspekt/",def:"admiration or due regard for the feelings, wishes, or rights of others",vi:"tôn trọng / sự tôn trọng",u:12},
+  {w:"heed",pos:"v",ipa:"/hiːd/",def:"to pay careful attention to advice or warnings",vi:"chú ý, nghe theo",u:12},
+  {w:"shape",pos:"v",ipa:"/ʃeɪp/",def:"to influence the development or form of something",vi:"định hình, tạo hình",u:12},
+  {w:"upsetting",pos:"adj",ipa:"/ʌpˈsetɪŋ/",def:"causing feelings of unhappiness, anger, or worry",vi:"gây phiền lòng, khó chịu",u:12},
+  {w:"critical",pos:"adj",ipa:"/ˈkrɪtɪkl/",def:"expressing adverse or disapproving comments, or extremely important",vi:"mang tính chỉ trích / rất quan trọng",u:12},
+  {w:"regretful",pos:"adj",ipa:"/rɪˈɡretfl/",def:"feeling or showing regret, sorrow, or disappointment",vi:"hối tiếc, ân hận",u:12},
+  {w:"ignorant",pos:"adj",ipa:"/ˈɪɡnərənt/",def:"lacking knowledge or information about something",vi:"thiếu hiểu biết, không biết",u:12},
+  {w:"respected",pos:"adj",ipa:"/rɪˈspektɪd/",def:"admired and held in high esteem by others",vi:"được tôn trọng, kính trọng",u:12},
+  {w:"discrimination",pos:"n",ipa:"/dɪˌskrɪmɪˈneɪʃn/",def:"unjust treatment of different categories of people or things",vi:"sự phân biệt đối xử",u:12},
+  {w:"invaluable",pos:"adj",ipa:"/ɪnˈvæljuəbl/",def:"extremely useful or indispensable; beyond price",vi:"vô giá, cực kỳ quý báu",u:12},
 ];
 
 let vocab = [...ALL_VOCAB];
@@ -284,7 +494,7 @@ function setUnit(u) {
   vocab = u === 'all' ? [...ALL_VOCAB] : ALL_VOCAB.filter(v => v.u === u);
   idx = 0;
   document.querySelectorAll('.unit-tabs button').forEach((b,i) => {
-    b.classList.toggle('active', (i===0 && u==='all') || (i===1 && u===1) || (i===2 && u===2) || (i===3 && u===3) || (i===4 && u===4));
+    b.classList.toggle('active', i === 0 ? u === 'all' : u === i);
   });
   render();
 }
@@ -330,7 +540,7 @@ function render() {
   const back = document.getElementById('back');
 
   if (dir === 'normal') {
-    front.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})</div><div class="card-hint">tap to reveal</div>`;
+    front.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})${c.ipa ? ' ' + c.ipa : ''}</div><div class="card-hint">tap to reveal</div>`;
     if (mode === 'def') {
       back.innerHTML = `<div class="card-def">${c.def}</div>`;
     } else {
@@ -342,7 +552,7 @@ function render() {
     } else {
       front.innerHTML = `<div class="card-word" style="font-size:1.3rem">${c.vi}</div><div class="card-hint">tap to reveal word</div>`;
     }
-    back.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})</div>`;
+    back.innerHTML = `<div class="card-word">${c.w}</div><div class="card-pos">(${c.pos})${c.ipa ? ' ' + c.ipa : ''}</div>`;
   }
 
   document.getElementById('progress').textContent = `${idx + 1} / ${vocab.length}` + (unit === 'all' ? '' : ` — Unit ${unit}`);
